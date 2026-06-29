@@ -1,0 +1,29 @@
+.gwob-admin-fields {
+  display: grid;
+  gap: 16px;
+  max-width: 820px;
+}
+
+.gwob-admin-fields label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+}
+
+.gwob-admin-fields label span {
+  color: #1d2327;
+}
+
+.gwob-admin-note {
+  margin: 0;
+  padding: 12px 14px;
+  border-left: 4px solid #2271b1;
+  background: #f6f7f7;
+}
+
+.gwob-checkbox {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500 !important;
+}

@@ -1,0 +1,15 @@
+services:
+  wordpress:
+    build:
+      context: .
+      dockerfile: docker/wordpress/Dockerfile
+    ports:
+      - "${WORDPRESS_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-1}"
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./storage/sqlite:/var/www/sqlite
+      - ./storage/uploads:/var/www/html/wp-content/uploads
+      - ./scripts:/var/www/html/scripts
+    restart: unless-stopped

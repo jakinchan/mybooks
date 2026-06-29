@@ -1,0 +1,5 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: GoodWorld Online Books 0.1.0\n"
+"Language: ja\n"
+"Content-Type: text/plain; charset=UTF-8\n"
