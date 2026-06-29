@@ -13,7 +13,7 @@ goodworld-wp-online-books/
   docker/wordpress/Dockerfile
   scripts/install-sqlite-wp.sh
   storage/sqlite/.gitkeep
-  storage/uploads/.gitkeep
+  uploads/.gitkeep
   wordpress/wp-content/plugins/goodworld-online-books/
 ```
 
@@ -32,11 +32,15 @@ cp .env.example .env
 docker compose up -d --build
 ```
 
-WordPress は http://localhost:8080 で開きます。この構成には MariaDB / MySQL / phpMyAdmin コンテナは含まれていません。
+WordPress は `.env` の `WORDPRESS_PORT` で指定したポートで開きます。標準設定では http://localhost:8080 です。この構成には MariaDB / MySQL / phpMyAdmin コンテナは含まれていません。
+
+WordPress 本体は Docker named volume `wordpress_data` に永続化し、開発対象の `goodworld-online-books` プラグイン、SQLite DB、`uploads/` はホスト側へ bind mount しています。Windows 環境では WordPress 本体全体を bind mount すると初回コピーが極端に遅くなる場合があるためです。
 
 ## SQLite Database Integration の導入
 
-WordPress 初期インストール前に SQLite Database Integration を有効化してください。プラグインのバージョンにより drop-in の配置や wp-config.php の設定が異なるため、必ず公式 README を確認してください。
+この Docker 構成では SQLite Database Integration をイメージ内に同梱し、`wp-content/db.php` drop-in と `docker/wordpress/wp-config.php` をあらかじめ配置しています。
+
+手動で構成を変更する場合は、WordPress 初期インストール前に SQLite Database Integration を有効化してください。プラグインのバージョンにより drop-in の配置や wp-config.php の設定が異なるため、必ず公式 README を確認してください。
 
 手動手順の目安:
 
@@ -99,7 +103,7 @@ docker compose exec wordpress bash /var/www/html/scripts/install-sqlite-wp.sh
 最低限、以下をバックアップしてください。
 
 - `storage/sqlite/`
-- `wordpress/wp-content/uploads/` または `storage/uploads/`
+- `uploads/`
 - `wordpress/wp-content/plugins/goodworld-online-books/`
 - 必要に応じて `wordpress/wp-content/themes/`
 
@@ -109,6 +113,22 @@ docker compose exec wordpress bash /var/www/html/scripts/install-sqlite-wp.sh
 - メディアアップロードに失敗する: `wp-content/uploads` の書き込み権限とボリュームマウントを確認してください。
 - flipbook が表示されない: Free PDF to Flipbook が有効か、許可されたショートコード名か確認してください。
 - 本が表示されない: 公開範囲、公開状態、カテゴリー、ショートコード属性を確認してください。
+
+## 動作確認結果
+
+このローカル環境では以下を確認済みです。
+
+- SQLite Database Integration: 有効化済み。SQLite DB は `storage/sqlite/.ht.sqlite` に作成されます。
+- Free PDF to Flipbook: 有効化済み。`[fptf-flipbook pdf="..."]` ショートコードでサンプル PDF を表示します。
+- GoodWorld Online Books: 有効化済み。`gw_book` 投稿タイプ、メタデータ、カテゴリーが SQLite に保存されます。
+- メディアアップロード: `wp media import` で PDF をメディア登録できることを確認済みです。`uploads/sample-goodworld-online-book.pdf` は `/wp-content/uploads/sample-goodworld-online-book.pdf` として配信できます。
+- ショートコード表示: `/books/` と `/books/sample-goodworld-online-book/` で本棚・詳細表示を確認済みです。
+
+## SQLite 利用時の互換性メモ
+
+SQLite は小規模サイト向けの軽量構成です。同時書き込みには弱いため、複数の wp-cli コマンド、管理画面操作、プラグイン更新チェックを並行して走らせると `database is locked` が出る場合があります。運用時は同時編集や同時更新を避け、プラグイン更新・大量登録・バックアップはアクセスの少ない時間に実行してください。
+
+Free PDF to Flipbook 本体は改造していません。GoodWorld Online Books は、Free PDF to Flipbook のショートコードを安全に保存・表示する補助プラグインです。Free PDF to Flipbook 側のショートコード仕様が変わった場合は、許可ショートコード名と保存形式を確認してください。
 
 ## 今後の拡張予定
 

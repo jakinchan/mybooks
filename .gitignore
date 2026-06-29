@@ -1,0 +1,11 @@
+.env
+storage/sqlite/.ht.sqlite*
+storage/sqlite/.htaccess
+storage/sqlite/index.php
+uploads/*
+!uploads/.gitkeep
+!uploads/sample-goodworld-online-book.pdf
+wordpress/wp-content/uploads/*
+!wordpress/wp-content/uploads/.gitkeep
+.playwright-cli/
+output/

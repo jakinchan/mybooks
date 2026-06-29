@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GoodWorld Online Books
  * Description: PDF bookshelves for WordPress + SQLite + Free PDF to Flipbook.
- * Version: 0.1.0
+ * Version: 0.1.1
  * Author: GoodWorld
  * Text Domain: goodworld-online-books
  * Domain Path: /languages
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('GWOB_VERSION', '0.1.0');
+define('GWOB_VERSION', '0.1.1');
 define('GWOB_PLUGIN_FILE', __FILE__);
 define('GWOB_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('GWOB_PLUGIN_URL', plugin_dir_url(__FILE__));

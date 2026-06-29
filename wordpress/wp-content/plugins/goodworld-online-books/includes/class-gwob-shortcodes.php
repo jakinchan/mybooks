@@ -77,7 +77,7 @@ class GWOB_Shortcodes
         $shortcode = trim((string) get_post_meta($post_id, '_gwob_flipbook_shortcode', true));
 
         if ($shortcode === '') {
-            return '<p class="gwob-empty">Flipbook ショートコードが未設定です。</p>';
+            return self::render_pdf_fallback($post_id);
         }
 
         if (!self::is_allowed_shortcode($shortcode)) {
@@ -85,6 +85,22 @@ class GWOB_Shortcodes
         }
 
         return do_shortcode($shortcode);
+    }
+
+    private static function render_pdf_fallback(int $post_id): string
+    {
+        $pdf_url = get_post_meta($post_id, '_gwob_pdf_url', true);
+
+        if (!$pdf_url) {
+            return '<p class="gwob-empty">Flipbook ショートコードまたは PDF URL が未設定です。</p>';
+        }
+
+        return sprintf(
+            '<iframe class="gwob-pdf-viewer" src="%s" title="%s"></iframe><p class="gwob-pdf-link"><a href="%s" target="_blank" rel="noopener">PDFを別タブで開く</a></p>',
+            esc_url($pdf_url),
+            esc_attr(get_the_title($post_id)),
+            esc_url($pdf_url)
+        );
     }
 
     private static function is_allowed_shortcode(string $shortcode): bool

@@ -12,12 +12,18 @@ $terms = get_the_terms($post_id, GWOB_Post_Type::TAXONOMY);
 $term_slugs = is_array($terms) ? implode(' ', wp_list_pluck($terms, 'slug')) : '';
 ?>
 <article class="gwob-card" data-title="<?php echo esc_attr(strtolower(get_the_title() . ' ' . $subtitle . ' ' . $author)); ?>" data-categories="<?php echo esc_attr($term_slugs); ?>">
-    <a class="gwob-cover" href="<?php the_permalink(); ?>">
-        <?php if (has_post_thumbnail()) : ?>
-            <?php the_post_thumbnail('medium_large'); ?>
-        <?php else : ?>
-            <span class="gwob-cover-placeholder">PDF</span>
-        <?php endif; ?>
+    <a class="gwob-cover" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr(get_the_title() . ' を開く'); ?>">
+        <span class="gwob-book-spine" aria-hidden="true"></span>
+        <span class="gwob-book-pages" aria-hidden="true"></span>
+        <span class="gwob-cover-face">
+            <?php if (has_post_thumbnail()) : ?>
+                <?php the_post_thumbnail('medium_large'); ?>
+            <?php else : ?>
+                <span class="gwob-cover-title"><?php the_title(); ?></span>
+                <?php if ($subtitle) : ?><span class="gwob-cover-subtitle"><?php echo esc_html($subtitle); ?></span><?php endif; ?>
+                <span class="gwob-cover-mark">PDF</span>
+            <?php endif; ?>
+        </span>
         <?php if ($featured) : ?>
             <span class="gwob-badge">おすすめ</span>
         <?php endif; ?>
@@ -34,6 +40,6 @@ $term_slugs = is_array($terms) ? implode(' ', wp_list_pluck($terms, 'slug')) : '
                 <?php foreach ($terms as $term) : ?><span><?php echo esc_html($term->name); ?></span><?php endforeach; ?>
             </div>
         <?php endif; ?>
-        <a class="gwob-read-button" href="<?php the_permalink(); ?>">本を読む</a>
+        <a class="gwob-read-button" href="<?php the_permalink(); ?>">本を開く</a>
     </div>
 </article>

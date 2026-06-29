@@ -6,10 +6,14 @@ if (!defined('ABSPATH')) {
 $columns = min(4, max(1, absint($atts['columns'])));
 ?>
 <section class="gwob-bookshelf" style="--gwob-columns: <?php echo esc_attr((string) $columns); ?>">
+    <div class="gwob-bookshelf-intro">
+        <p class="gwob-kicker">Bookshelf</p>
+        <h2>本棚から選ぶ</h2>
+    </div>
     <?php if ($atts['show_search'] === '1' || $atts['show_category_filter'] === '1') : ?>
         <div class="gwob-toolbar">
             <?php if ($atts['show_search'] === '1') : ?>
-                <input class="gwob-search" type="search" placeholder="本を検索" aria-label="本を検索">
+                <input class="gwob-search" type="search" placeholder="タイトル・著者で検索" aria-label="タイトル・著者で検索">
             <?php endif; ?>
             <?php if ($atts['show_category_filter'] === '1' && !is_wp_error($terms) && $terms) : ?>
                 <select class="gwob-category-filter" aria-label="カテゴリーで絞り込み">
@@ -22,6 +26,7 @@ $columns = min(4, max(1, absint($atts['columns'])));
         </div>
     <?php endif; ?>
 
+    <div class="gwob-shelf-rail" aria-hidden="true"></div>
     <div class="gwob-grid">
         <?php while ($query->have_posts()) : $query->the_post(); ?>
             <?php

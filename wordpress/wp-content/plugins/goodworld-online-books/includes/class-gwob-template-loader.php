@@ -17,6 +17,10 @@ class GWOB_Template_Loader
             return GWOB_PLUGIN_DIR . 'templates/single-book.php';
         }
 
+        if (is_page('books')) {
+            return GWOB_PLUGIN_DIR . 'templates/archive-book.php';
+        }
+
         if (is_post_type_archive(GWOB_Post_Type::POST_TYPE) || is_tax(GWOB_Post_Type::TAXONOMY)) {
             return GWOB_PLUGIN_DIR . 'templates/archive-book.php';
         }

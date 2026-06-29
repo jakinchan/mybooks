@@ -4,7 +4,7 @@ Tags: pdf, bookshelf, sqlite, flipbook
 Requires at least: 6.0
 Tested up to: 6.6
 Requires PHP: 8.1
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 
 PDF bookshelves for WordPress + SQLite + Free PDF to Flipbook.

@@ -16,6 +16,10 @@ class GWOB_Assets
     {
         wp_enqueue_style('gwob-frontend', GWOB_PLUGIN_URL . 'assets/css/frontend.css', [], GWOB_VERSION);
         wp_enqueue_script('gwob-frontend', GWOB_PLUGIN_URL . 'assets/js/frontend.js', [], GWOB_VERSION, true);
+
+        if ($this->should_enqueue_flipbook_assets()) {
+            $this->enqueue_flipbook_assets();
+        }
     }
 
     public function admin(string $hook): void
@@ -29,5 +33,27 @@ class GWOB_Assets
         wp_enqueue_media();
         wp_enqueue_style('gwob-admin', GWOB_PLUGIN_URL . 'assets/css/admin.css', [], GWOB_VERSION);
         wp_enqueue_script('gwob-admin', GWOB_PLUGIN_URL . 'assets/js/admin.js', ['jquery'], GWOB_VERSION, true);
+    }
+
+    private function should_enqueue_flipbook_assets(): bool
+    {
+        if (is_singular(GWOB_Post_Type::POST_TYPE)) {
+            return true;
+        }
+
+        return is_page('books') || is_post_type_archive(GWOB_Post_Type::POST_TYPE) || is_tax(GWOB_Post_Type::TAXONOMY);
+    }
+
+    private function enqueue_flipbook_assets(): void
+    {
+        if (!defined('WP_PLUGIN_URL') || !is_dir(WP_PLUGIN_DIR . '/free-pdf-to-flipbook')) {
+            return;
+        }
+
+        wp_enqueue_style('flipstyle-css', plugins_url('free-pdf-to-flipbook/css/flipstyle.css'), [], '3.1.0');
+        wp_enqueue_script('pdf-js', plugins_url('free-pdf-to-flipbook/js/pdf.js'), [], '3.5.141', true);
+        wp_enqueue_script('jquery');
+        wp_enqueue_script('turn-js', plugins_url('free-pdf-to-flipbook/js/turnV5.js'), ['jquery'], '3.1.0', true);
+        wp_enqueue_script('flipbook-js', plugins_url('free-pdf-to-flipbook/js/fptf-flipbook.js'), ['jquery', 'turn-js'], '3.1.0', true);
     }
 }

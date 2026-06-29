@@ -5,11 +5,15 @@ services:
       dockerfile: docker/wordpress/Dockerfile
     ports:
       - "${WORDPRESS_PORT:-8080}:80"
-    environment:
-      WORDPRESS_DEBUG: "${WORDPRESS_DEBUG:-1}"
     volumes:
-      - ./wordpress:/var/www/html
+      - wordpress_data:/var/www/html
+      - ./docker/wordpress/wp-config.php:/var/www/html/wp-config.php
+      - ./docker/wordpress/.htaccess:/var/www/html/.htaccess
+      - ./wordpress/wp-content/plugins/goodworld-online-books:/var/www/html/wp-content/plugins/goodworld-online-books
       - ./storage/sqlite:/var/www/sqlite
-      - ./storage/uploads:/var/www/html/wp-content/uploads
+      - ./uploads:/var/www/html/wp-content/uploads
       - ./scripts:/var/www/html/scripts
     restart: unless-stopped
+
+volumes:
+  wordpress_data:
