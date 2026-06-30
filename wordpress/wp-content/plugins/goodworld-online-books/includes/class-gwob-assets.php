@@ -43,7 +43,10 @@ class GWOB_Assets
     private function is_marketing_page(): bool
     {
         return is_front_page()
-            || is_page(['upload-book-guide', 'pricing', 'faq', 'contact', 'company', 'privacy-policy', 'terms']);
+            || is_page(['books', 'upload-book-guide', 'pricing', 'faq', 'contact', 'company', 'privacy-policy', 'terms'])
+            || is_singular(GWOB_Post_Type::POST_TYPE)
+            || is_post_type_archive(GWOB_Post_Type::POST_TYPE)
+            || is_tax(GWOB_Post_Type::TAXONOMY);
     }
 
     private function should_enqueue_flipbook_assets(): bool
