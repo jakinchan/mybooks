@@ -25,6 +25,7 @@ require_once GWOB_PLUGIN_DIR . 'includes/class-gwob-assets.php';
 require_once GWOB_PLUGIN_DIR . 'includes/class-gwob-access-control.php';
 require_once GWOB_PLUGIN_DIR . 'includes/class-gwob-template-loader.php';
 require_once GWOB_PLUGIN_DIR . 'includes/class-gwob-shortcodes.php';
+require_once GWOB_PLUGIN_DIR . 'includes/class-gwob-forms.php';
 
 function gwob(): GWOB_Plugin
 {
