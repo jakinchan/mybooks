@@ -1,0 +1,9 @@
+# pdf.js の CMap / 標準フォントはバイナリ。改行変換で壊さない。
+*.bcmap binary
+*.pfb binary
+*.pdf binary
+
+# サーバ配信されるソースは LF 固定（Windows でも CRLF に変換しない）。
+*.php text eol=lf
+*.css text eol=lf
+*.js text eol=lf

@@ -82,6 +82,29 @@ docker compose exec wordpress bash /var/www/html/scripts/install-sqlite-wp.sh
 [gw_bookshelf category="ai" columns="3" limit="12" show_search="1" show_category_filter="1"]
 ```
 
+## 公開用ページ
+
+GoodWorld Online Books は有効化時に、サービス公開に必要な固定ページを自動生成し、`mybooks` 専用デザインの独立テンプレートで表示します（テーマ非依存）。
+
+| ページ | スラッグ | テンプレート |
+| --- | --- | --- |
+| トップ（サービス紹介） | `/`（フロントページ） | `templates/landing-page.php` |
+| PDF本の作り方 | `/upload-book-guide/` | `templates/guide-page.php` |
+| オンライン本棚 | `/books/` | `templates/archive-book.php` |
+| 料金プラン | `/pricing/` | `templates/pricing-page.php` |
+| よくある質問 | `/faq/` | `templates/faq-page.php` |
+| お問い合わせ | `/contact/` | `templates/contact-page.php` |
+| 運営会社 / プライバシーポリシー / 利用規約 | `/company/`, `/privacy-policy/`, `/terms/` | `templates/page-simple.php`（本文は管理画面で編集可） |
+
+ヘッダー／フッターは `templates/partials/site-header.php`・`site-footer.php` で共通化しています。スマホではハンバーガーメニュー（`assets/js/landing.js`）で開閉します。
+
+## お問い合わせ・ニュースレター
+
+- お問い合わせフォーム（`/contact/`）とフッターのニュースレター登録は、`admin-post.php` 経由で `GWOB_Forms` が処理し、`gwob_inquiry` 投稿タイプに保存します。
+- 受信内容は管理画面の「お問い合わせ」メニューで確認できます（種別: お問い合わせ / ニュースレター）。
+- 送信時に nonce 検証・入力検証を行います。管理者メール通知は `wp_mail` による best-effort で、SMTP 未設定環境でも保存自体は成功します。
+- 運用時はメール送信プラグイン（WP Mail SMTP 等）の設定を推奨します。
+
 ## アクセス制御
 
 - `public`: 誰でも閲覧できます。
@@ -112,6 +135,7 @@ docker compose exec wordpress bash /var/www/html/scripts/install-sqlite-wp.sh
 - SQLite インストール画面に進めない: `wp-content/db.php` drop-in と SQLite Database Integration の README を確認してください。
 - メディアアップロードに失敗する: `wp-content/uploads` の書き込み権限とボリュームマウントを確認してください。
 - flipbook が表示されない: Free PDF to Flipbook が有効か、許可されたショートコード名か確認してください。
+- flipbook の枠・表組みは出るが日本語など文字が表示されない: PDF が CID キー font（日本語フォントなど）を使用しており、pdf.js が CMap を取得できていない状態です。GoodWorld Online Books は同梱の `assets/pdfjs/cmaps/`・`assets/pdfjs/standard_fonts/` と `assets/js/pdfjs-cmap-shim.js` で Free PDF to Flipbook 本体を改造せずに CMap 取得先を注入します。これらのファイルが配信できているか（404 でないか）確認してください。
 - 本が表示されない: 公開範囲、公開状態、カテゴリー、ショートコード属性を確認してください。
 
 ## 動作確認結果
